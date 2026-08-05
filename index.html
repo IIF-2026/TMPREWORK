@@ -99,7 +99,7 @@ const CONFIG = {
   .topbar .logo .mark{width:34px;height:34px;border-radius:9px;background:var(--blue);color:var(--navy);display:grid;place-items:center;font-weight:800;font-family:var(--display)}
   .topbar .who{display:flex;align-items:center;gap:10px;font-size:13px}
   .topbar .who .av{width:34px;height:34px;border-radius:50%;background:var(--blue);color:var(--navy);display:grid;place-items:center;font-weight:700;font-size:13px}
-  .topbar .signout{color:rgba(255,255,255,.8);font-size:12.5px;text-decoration:underline}
+  .topbar .signout{color:#fff;background:rgba(255,255,255,.16);font-size:14px;padding:8px 16px;border-radius:9px;font-weight:600}
   .lang-toggle{display:flex;background:rgba(255,255,255,.14);border-radius:9px;overflow:hidden}
   .lang-toggle button{padding:6px 10px;color:rgba(255,255,255,.65);font-size:12px;font-weight:700}
   .lang-toggle button.on{background:var(--blue);color:var(--navy)}
@@ -158,6 +158,10 @@ const CONFIG = {
   #scPlayer{display:none;flex-direction:column;min-height:100dvh}
   .p-top{position:sticky;top:0;z-index:30;background:var(--navy);color:#fff;display:flex;align-items:center;gap:12px;padding:12px 16px}
   .p-top .ico{background:rgba(255,255,255,.14);width:36px;height:36px;border-radius:9px;color:#fff;display:grid;place-items:center;font-size:17px}
+  .p-top .home-btn{display:flex;align-items:center;gap:7px;background:var(--blue);color:var(--navy);padding:9px 16px 9px 13px;border-radius:11px;font-family:var(--display);font-weight:800;font-size:15px;box-shadow:0 2px 8px rgba(0,0,0,.2);transition:transform .1s}
+  .p-top .home-btn:active{transform:scale(.95)}
+  .p-top .home-btn .hi{font-size:19px;line-height:1}
+  .p-top .home-btn .hl{line-height:1}
   .p-top .tt{font-family:var(--display);font-weight:700;font-size:14.5px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .p-strip{height:5px;background:rgba(255,255,255,.15)}
   .p-strip>i{display:block;height:100%;background:var(--blue);width:0;transition:width .4s}
@@ -197,6 +201,13 @@ const CONFIG = {
   .audio-card .play{width:46px;height:46px;border-radius:50%;background:var(--navy);color:#fff;font-size:17px;flex-shrink:0;display:grid;place-items:center}
   .audio-card .meta{flex:1}.audio-card .meta .l{font-size:12px;color:var(--muted);font-weight:600}
   .audio-card input[type=range]{width:100%;accent-color:var(--blue);margin-top:4px}
+  .impact-head{font-family:var(--display);font-size:1.05rem;font-weight:700;color:var(--navy);text-align:center;line-height:1.45;margin:6px 0 14px}
+  .impact-head.te{font-family:var(--te)}
+  .audio-player{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:40px;padding:8px 16px 8px 8px;box-shadow:var(--shadow);margin:4px 0 6px}
+  .audio-player .ap-play{width:42px;height:42px;border-radius:50%;background:var(--navy);color:#fff;font-size:15px;flex-shrink:0;display:grid;place-items:center;transition:transform .1s}
+  .audio-player .ap-play:active{transform:scale(.9)}
+  .audio-player .ap-bar{flex:1;accent-color:var(--blue);height:4px}
+  .audio-player .ap-time{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:34px;text-align:right}
 
   .fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
   .fc{perspective:1000px;height:190px;cursor:pointer}
@@ -241,9 +252,12 @@ const CONFIG = {
   #scDone{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;min-height:100dvh;background:radial-gradient(120% 90% at 50% 0%,#0f4658,var(--navy));color:#fff}
   #scDone .medal{font-size:64px;margin-bottom:10px}
   #scDone h2{font-family:var(--display);font-size:28px;margin:0 0 8px}
-  #scDone .cert{background:#fff;color:var(--ink);border-radius:16px;padding:26px;margin-top:26px;max-width:400px;width:100%;border-top:6px solid var(--amber)}
-  #scDone .cert .ct{font-family:var(--display);font-weight:800;color:var(--navy);font-size:16px}
-  #scDone .cert .nm{font-size:24px;font-weight:700;margin:12px 0;font-family:var(--display)}
+  .cert-live{margin-top:22px;width:100%;display:flex;justify-content:center}
+  .cert-card{display:flex;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-top:18px;box-shadow:var(--shadow)}
+  .cert-card.locked{opacity:.65;filter:grayscale(.3)}
+  .cert-card-icon{font-size:34px;flex-shrink:0}
+  .cert-card-body b{font-family:var(--display);color:var(--navy);font-size:15px}
+  .cert-card-body p{margin:4px 0 0;font-size:13px;color:var(--muted)}
 
   .save-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--navy);color:#fff;padding:11px 20px;border-radius:30px;font-size:13px;font-weight:600;z-index:70;transition:transform .3s;box-shadow:0 6px 20px rgba(0,0,0,.25)}
   .save-toast.show{transform:translateX(-50%) translateY(0)}
@@ -284,7 +298,6 @@ const CONFIG = {
 <section id="scCourse">
   <header class="topbar">
     <div class="logo"><span class="mark">IL</span><span id="topOrg">Inqui-Lab Foundation</span></div>
-    <div class="lang-toggle"><button data-lang="en" class="on">EN</button><button data-lang="te">తె</button></div>
     <div class="who"><div class="av" id="whoAv">S</div><span id="whoName"></span><button class="signout" id="btnSignout">Sign out</button></div>
   </header>
   <div class="hero"><div class="hero-in">
@@ -310,16 +323,23 @@ const CONFIG = {
       <p id="courseAbout"></p>
     </div>
     <div class="llist"><h3>Lessons</h3><div id="homeLessons"></div></div>
+    <div class="cert-card" id="certCard">
+      <div class="cert-card-icon" id="certCardIcon">🔒</div>
+      <div class="cert-card-body">
+        <b id="certCardTitle">Certificate of Completion</b>
+        <p id="certCardMsg">Complete all lessons to unlock your certificate.</p>
+        <button class="btn sun" id="btnHomeCert" style="display:none;max-width:260px;margin-top:10px">⬇ View &amp; Download</button>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- ══ PLAYER ══ -->
 <section id="scPlayer">
   <div class="p-top">
-    <button class="ico" id="btnHome" title="Home">⌂</button>
+    <button class="home-btn" id="btnHome" title="Go to Home"><span class="hi">⌂</span><span class="hl">Home</span></button>
     <button class="ico menu" id="btnMenu">☰</button>
     <div class="tt" id="playerTitle">Lesson</div>
-    <div class="lang-toggle"><button data-lang="en" class="on">EN</button><button data-lang="te">తె</button></div>
   </div>
   <div class="p-strip"><i id="pStrip"></i></div>
   <div class="p-layout">
@@ -346,17 +366,17 @@ const CONFIG = {
   <div class="medal">🏅</div>
   <h2>Prework Complete!</h2>
   <p style="opacity:.9;max-width:360px">Congratulations — you've finished all lessons. You're ready for the training.</p>
-  <div class="cert">
-    <div class="ct">CERTIFICATE OF COMPLETION</div>
-    <div class="nm" id="certName" style="border-bottom:2px solid var(--navy);min-width:280px;min-height:1.5em;margin:6px auto 0"></div>
-    <div style="font-size:13px;color:var(--muted)">has successfully completed the<br><b id="certCourse">Training Prework</b></div>
-    <div style="font-size:12px;color:var(--muted);margin-top:14px" id="certDate"></div>
+  <div class="cert-live">
+    <canvas id="certCanvas" style="display:none"></canvas>
+    <img id="certImg" alt="Certificate" style="width:100%;max-width:520px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.3)">
   </div>
-  <button class="btn blue" style="max-width:300px;margin-top:24px" id="btnBackHome">Back to home</button>
+  <button class="btn sun" style="max-width:320px;margin-top:20px" id="btnCertDownload">⬇ Download Certificate (PDF)</button>
+  <button class="btn blue" style="max-width:320px;margin-top:12px" id="btnBackHome">Back to home</button>
 </section>
 
 <div class="save-toast" id="saveToast">Progress saved</div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="course-data.js" onerror="window.__courseLoadFailed=true"></script>
 <script>
 const $ = s => document.getElementById(s);
@@ -466,9 +486,7 @@ function enterCourse(){
   $('teachName').textContent=COURSE.instructor||'Instructor'; $('teachAv').textContent=initials(COURSE.instructor||'I');
   $('courseAbout').textContent=COURSE.about||'Watch each video, listen to the audio, and answer the practice questions to complete your prework.';
   $('sideCourse').textContent=COURSE.title;
-  $('certCourse').textContent=COURSE.title;
-  $('certName').textContent=(student&&student.name)?student.name:'';
-  $('certDate').textContent=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+  /* certificate is rendered on the Done screen via drawCertificate() */
   buildHomeLessons(); updateProgress();
 }
 function buildHomeLessons(){
@@ -484,6 +502,7 @@ function buildHomeLessons(){
 $('btnStart').onclick=()=>{ let t=0; for(let i=0;i<COURSE.lessons.length;i++){ if(!(progress[i]&&progress[i].done)){ t=i;break; } t=i; } openPlayer(t); };
 $('btnHome').onclick=()=>{ showScreen('scCourse'); enterCourse(); };
 $('btnBackHome').onclick=()=>{ showScreen('scCourse'); enterCourse(); };
+$('btnHomeCert').onclick=()=>{ showDone(); };
 
 /* ── PLAYER ── */
 function openPlayer(i){ showScreen('scPlayer'); curLesson=i; renderLesson(i); updateProgress(); }
@@ -528,7 +547,30 @@ function blockEl(b,li,bi,onQuiz){
   if(b.type==='list'){ const ul=document.createElement('ul'); ul.className='blk-list'; b.items.forEach((it,n)=>{ const x=document.createElement('li'); x.innerHTML=`<span class="n">${n+1}</span><span>${esc(it)}</span>`; ul.appendChild(x); }); w.appendChild(ul); return w; }
   if(b.type==='flashcards'){ w.appendChild(flashEl(b)); return w; }
   if(b.type==='quiz'){ w.appendChild(quizEl(b,li,bi,onQuiz)); return w; }
+  if(b.type==='impact'){
+    const lt=langText(b.text||'');
+    const h=document.createElement('p'); h.className='impact-head'+(lt.te?' te':''); h.textContent=lt.main;
+    w.appendChild(h);
+    if(b.audio) w.appendChild(audioEl(b.audio));
+    return w;
+  }
+  if(b.type==='audio'){ w.appendChild(audioEl(b.key)); return w; }
   return null;
+}
+function audioEl(file){
+  const wrap=document.createElement('div'); wrap.className='audio-player';
+  const a=document.createElement('audio'); a.preload='metadata'; a.src='assets/audio/'+encodeURIComponent(file);
+  const play=document.createElement('button'); play.className='ap-play'; play.textContent='▶';
+  const bar=document.createElement('input'); bar.type='range'; bar.min=0; bar.value=0; bar.step=0.1; bar.className='ap-bar';
+  const time=document.createElement('span'); time.className='ap-time'; time.textContent='0:00';
+  const fmt=s=>{s=Math.floor(s||0);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
+  a.addEventListener('loadedmetadata',()=>{ bar.max=a.duration||0; time.textContent=fmt(a.duration); });
+  a.addEventListener('timeupdate',()=>{ bar.value=a.currentTime; time.textContent=fmt(a.duration-a.currentTime); });
+  a.addEventListener('ended',()=>{ play.textContent='▶'; });
+  play.onclick=()=>{ if(a.paused){ a.play(); play.textContent='⏸'; } else { a.pause(); play.textContent='▶'; } };
+  bar.oninput=()=>{ a.currentTime=bar.value; };
+  wrap.append(play,bar,time,a);
+  return wrap;
 }
 function videoEl(b){
   const wrap=document.createElement('div'); wrap.className='video-wrap';
@@ -598,6 +640,21 @@ function updateProgress(){
   $('heroPct').innerHTML=pct+'<small>% Completed</small>'; $('heroBar').style.width=pct+'%';
   $('miniTotal').textContent=total; $('miniDone').textContent=done; $('miniLeft').textContent=total-done;
   $('pStrip').style.width=pct+'%'; $('sideBar').style.width=pct+'%'; $('sidePct').textContent=pct+'% complete';
+  // home certificate card lock/unlock
+  const card=$('certCard'), btn=$('btnHomeCert');
+  if(card){
+    if(pct>=100){
+      card.classList.remove('locked');
+      $('certCardIcon').textContent='🏅';
+      $('certCardMsg').textContent='Congratulations! You\u2019ve completed this level. Download your certificate below.';
+      if(btn) btn.style.display='';
+    } else {
+      card.classList.add('locked');
+      $('certCardIcon').textContent='🔒';
+      $('certCardMsg').textContent='Complete all lessons to unlock your certificate ('+done+'/'+total+' done).';
+      if(btn) btn.style.display='none';
+    }
+  }
 }
 
 /* ── SHEET SYNC ── */
@@ -612,7 +669,58 @@ function syncProgress(){
 }
 function toast(){ const t=$('saveToast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1600); }
 
-function showDone(){ showScreen('scDone'); if(CONFIG.sheetURL) syncProgress(); }
+/* ── CERTIFICATE ── */
+const CERT_SRC='assets/img/Certificate.png';
+let _certImg=null, _certDataURL=null;
+function loadCertBase(){
+  return new Promise((res,rej)=>{
+    if(_certImg) return res(_certImg);
+    const im=new Image(); im.crossOrigin='anonymous';
+    im.onload=()=>{ _certImg=im; res(im); };
+    im.onerror=rej; im.src=CERT_SRC;
+  });
+}
+async function drawCertificate(){
+  const name=(student&&student.name)?student.name:(student?student.id:'');
+  const lvl='Level '+(student?student.level:'');
+  const date=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  let im;
+  try{ im=await loadCertBase(); }catch(e){ return null; }
+  const W=im.naturalWidth||1448, H=im.naturalHeight||1086;
+  const c=$('certCanvas'); c.width=W; c.height=H;
+  const ctx=c.getContext('2d');
+  ctx.drawImage(im,0,0,W,H);
+  ctx.textAlign='center';
+  // NAME on the rule
+  ctx.fillStyle='#173A6E';
+  ctx.font='700 60px Epilogue, Poppins, sans-serif';
+  ctx.fillText(name, W/2, 590-24);
+  // DATE above 'Date' label
+  ctx.fillStyle='#3c3c3c';
+  ctx.font='700 28px Poppins, sans-serif';
+  ctx.fillText(date, 465, 800+22);
+  // LEVEL above 'Level' label
+  ctx.fillText(lvl, 1013, 800+22);
+  _certDataURL=c.toDataURL('image/png');
+  $('certImg').src=_certDataURL;
+  return _certDataURL;
+}
+function downloadCertificatePDF(){
+  if(!_certDataURL){ return; }
+  try{
+    const { jsPDF }=window.jspdf;
+    const pdf=new jsPDF({orientation:'landscape',unit:'px',format:[1448,1086]});
+    pdf.addImage(_certDataURL,'PNG',0,0,1448,1086);
+    const nm=((student&&student.name)||student.id||'certificate').replace(/\s+/g,'_');
+    pdf.save('TM_Certificate_'+nm+'.pdf');
+  }catch(e){
+    // fallback: open PNG in new tab for manual save
+    const w=window.open(); if(w) w.document.write('<img src="'+_certDataURL+'" style="width:100%">');
+  }
+}
+$('btnCertDownload').onclick=downloadCertificatePDF;
+
+function showDone(){ showScreen('scDone'); drawCertificate(); if(CONFIG.sheetURL) syncProgress(); }
 
 /* ── SIDEBAR ── */
 $('btnMenu').onclick=()=>{ $('pSide').classList.add('open'); $('backdrop').classList.add('show'); };
