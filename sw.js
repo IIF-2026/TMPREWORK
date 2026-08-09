@@ -1,4 +1,4 @@
-const CACHE='tm-prework-v8';
+const CACHE='tm-prework-v9';
 const CORE=['./','./index.html','./course-data.js','./manifest.json'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',e=>{e.waitUntil(
