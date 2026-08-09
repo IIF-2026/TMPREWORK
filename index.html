@@ -190,7 +190,9 @@ const CONFIG = {
   .l-h{font-family:var(--display);font-size:25px;font-weight:800;margin:6px 0 22px;color:var(--navy);line-height:1.2}
 
   .blk{margin:0 0 22px}
-  .blk p.txt{font-size:16px;margin:0 0 10px;white-space:pre-line}
+  .blk .txt{font-size:16px;margin:0 0 10px;line-height:1.6;color:var(--ink)}
+  .blk .txt .rich-h{font-family:var(--display);font-weight:800;color:var(--navy);font-size:19px;margin:14px 0 8px}
+  .blk .txt strong{font-weight:700;color:var(--navy)}
   .video-wrap{position:relative;border-radius:16px;overflow:hidden;background:#000;box-shadow:var(--shadow);aspect-ratio:16/9}
   .video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
   .video-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;background:linear-gradient(135deg,#12414f,#0a2c37);text-align:center;padding:20px;gap:6px}
@@ -211,17 +213,20 @@ const CONFIG = {
   .audio-player .ap-bar{flex:1;accent-color:var(--blue);height:4px}
   .audio-player .ap-time{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:34px;text-align:right}
 
-  .fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;align-items:stretch}
-  .fc{perspective:1000px;min-height:210px;cursor:pointer}
-  .fc-inner{position:relative;width:100%;height:100%;min-height:210px;transition:transform .5s;transform-style:preserve-3d}
+  .fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;align-items:stretch}
+  .fc{perspective:1200px;min-height:250px;cursor:pointer}
+  .fc-inner{position:relative;width:100%;height:100%;min-height:250px;transition:transform .5s;transform-style:preserve-3d}
   .fc.flip .fc-inner{transform:rotateY(180deg)}
-  .fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;padding:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:var(--shadow);overflow:hidden}
-  .fc-front{background:linear-gradient(135deg,var(--navy),#134d61);color:#fff}
+  .fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:var(--shadow);overflow:hidden}
+  .fc-front{background:linear-gradient(135deg,var(--navy),#134d61);color:#fff;padding:14px;gap:10px}
+  .fc-front .fc-swatch{width:100%;max-height:150px;object-fit:contain;border-radius:8px}
   .fc-front .t{font-family:var(--display);font-weight:700;font-size:19px}
-  .fc-front .hint{position:absolute;bottom:10px;font-size:10.5px;opacity:.65}
-  .fc-back{background:#fff;border:1.5px solid var(--blue);transform:rotateY(180deg);font-size:13px;gap:8px;overflow-y:auto}
-  .fc-back img{width:100%;max-height:110px;object-fit:contain;border-radius:8px;background:#f4f7f9}
-  .fc-back .ab{width:36px;height:36px;border-radius:50%;background:var(--blue);color:var(--navy);display:grid;place-items:center;font-size:15px;flex-shrink:0}
+  .fc-front .hint{position:absolute;bottom:10px;font-size:10.5px;opacity:.6}
+  .fc-back{background:#fff;border:1.5px solid var(--blue);transform:rotateY(180deg);padding:12px;gap:8px;justify-content:flex-start;overflow-y:auto}
+  .fc-back .fc-bimg{width:100%;max-height:130px;object-fit:contain;border-radius:8px;background:#f4f7f9;flex-shrink:0}
+  .fc-back .fc-btext{font-size:13.5px;line-height:1.5;color:var(--ink)}
+  .fc-back .audio-player{width:100%;padding:5px 10px;margin-top:auto}
+  .fc-back .audio-player .ap-play{width:34px;height:34px;font-size:13px}
   /* step slider */
   .steps{margin:8px 0 4px}
   .step-nav{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:10px}
@@ -502,6 +507,17 @@ function langText(t){
   return {main:en||t,te:false};
 }
 function esc(s){ return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function richHTML(t){
+  if(!t) return '';
+  // escape first, then convert our safe markers to HTML
+  let s=esc(t);
+  s=s.replace(/\[\[H\]\]([\s\S]*?)\[\[\/H\]\]/g,'<h4 class="rich-h">$1</h4>');
+  s=s.replace(/\[\[B\]\]([\s\S]*?)\[\[\/B\]\]/g,'<strong>$1</strong>');
+  s=s.replace(/\n/g,'<br>');
+  // tidy: no <br> right after a heading close
+  s=s.replace(/<\/h4><br>/g,'</h4>');
+  return s;
+}
 function initials(s){ return (s||'S').trim().split(/\s+/).slice(0,2).map(w=>w[0].toUpperCase()).join(''); }
 
 /* ── SCREENS ── */
@@ -574,7 +590,7 @@ function refreshContinue(need,got){ $('btnContinue').disabled=(CONFIG.quizMode==
 
 function blockEl(b,li,bi,onQuiz){
   const w=document.createElement('div'); w.className='blk';
-  if(b.type==='text'){ const lt=langText(b.text); const p=document.createElement('p'); p.className='txt'+(lt.te?' te':''); p.textContent=lt.main; w.appendChild(p); if(b.audio) w.appendChild(audioEl(b.audio)); return w; }
+  if(b.type==='text'){ const p=document.createElement('div'); p.className='txt'; p.innerHTML=richHTML(b.text); w.appendChild(p); if(b.audio) w.appendChild(audioEl(b.audio)); return w; }
   if(b.type==='video'){ w.appendChild(videoEl(b)); return w; }
   if(b.type==='image'){ const d=document.createElement('div'); d.className='blk-img'; const img=document.createElement('img'); img.loading='lazy'; img.src='assets/img/'+encodeURIComponent(b.src||''); img.onerror=()=>{w.style.display='none';}; d.appendChild(img); w.appendChild(d); return w; }
   if(b.type==='gallery'){ w.appendChild(galleryEl(b)); return w; }
@@ -630,11 +646,19 @@ function flashEl(b){
   const grid=document.createElement('div'); grid.className='fc-grid';
   b.cards.forEach(card=>{
     const fc=document.createElement('div'); fc.className='fc';
-    const back=langText(card.back);
-    const backImg=card.img?`<img src="assets/img/${encodeURIComponent(card.img)}" onerror="this.style.display='none'">`:'';
-    const audBtn=card.audio?`<div class="ab" data-a="${card.audio}">🔊</div>`:'';
-    fc.innerHTML=`<div class="fc-inner"><div class="fc-face fc-front"><div class="t${back.te?' te':''}">${esc(card.front)}</div><div class="hint">Tap to flip</div></div><div class="fc-face fc-back">${backImg}<div class="${back.te?'te':''}">${esc(back.main)}</div>${audBtn}</div></div>`;
-    fc.onclick=e=>{ if(e.target.classList.contains('ab')){ new Audio('assets/audio/'+e.target.dataset.a).play(); e.stopPropagation(); return; } fc.classList.toggle('flip'); };
+    // FRONT: swatch image if present, plus the name label
+    const frontImg=card.fimg?`<img class="fc-swatch" src="assets/img/${encodeURIComponent(card.fimg)}" onerror="this.style.display='none'">`:'';
+    const frontLabel=card.front?`<div class="t">${richHTML(card.front)}</div>`:'';
+    // BACK: image if present, then text, then audio player
+    const backImg=card.bimg?`<img class="fc-bimg" src="assets/img/${encodeURIComponent(card.bimg)}" onerror="this.style.display='none'">`:'';
+    const backText=card.back?`<div class="fc-btext">${richHTML(card.back)}</div>`:'';
+    const audSlot=card.audio?'<div class="fc-audio-slot"></div>':'';
+    fc.innerHTML=`<div class="fc-inner">
+      <div class="fc-face fc-front">${frontImg}${frontLabel}<div class="hint">Tap to flip</div></div>
+      <div class="fc-face fc-back">${backImg}${backText}${audSlot}</div>
+    </div>`;
+    if(card.audio){ const slot=fc.querySelector('.fc-audio-slot'); if(slot) slot.replaceWith(audioEl(card.audio)); }
+    fc.onclick=e=>{ if(e.target.closest('.audio-player')) return; fc.classList.toggle('flip'); };
     grid.appendChild(fc);
   });
   return grid;
@@ -651,11 +675,10 @@ function stepsEl(b){
   function render(){
     const s=b.steps[cur];
     badge.textContent='Step '+(cur+1);
-    const t=langText(s.text||'');
-    const title=s.title?`<div class="step-title${langText(s.title).te?' te':''}">${esc(langText(s.title).main)}</div>`:'';
+    const title=s.title?`<div class="step-title">${richHTML(s.title)}</div>`:'';
     const audio=s.audio?'<div class="step-audio-slot"></div>':'';
     const img=s.img?`<img class="step-img" src="assets/img/${encodeURIComponent(s.img)}" onerror="this.style.display='none'">`:'';
-    card.innerHTML=`${title}${audio}${img}<div class="step-text${t.te?' te':''}">${esc(t.main).replace(/\n/g,'<br>')}</div>`;
+    card.innerHTML=`${title}${audio}${img}<div class="step-text">${richHTML(s.text||'')}</div>`;
     if(s.audio){ const slot=card.querySelector('.step-audio-slot'); if(slot) slot.replaceWith(audioEl(s.audio)); }
     dots.innerHTML=''; b.steps.forEach((_,i)=>{ const d=document.createElement('span'); d.className='step-dot'+(i===cur?' on':''); d.onclick=()=>{cur=i;render();}; dots.appendChild(d); });
     prev.style.visibility=cur>0?'visible':'hidden'; next.style.visibility=cur<b.steps.length-1?'visible':'hidden';
@@ -680,13 +703,11 @@ function galleryEl(b){
 }
 function quizEl(b,li,bi,onAnswered){
   const card=document.createElement('div'); card.className='quiz-card';
-  const lt=langText(b.q);
-  const q=document.createElement('div'); q.className='q'+(lt.te?' te':''); q.textContent=lt.main; card.appendChild(q);
+  const q=document.createElement('div'); q.className='q'; q.innerHTML=richHTML(b.q); card.appendChild(q);
   let selected=-1,locked=false; const opts=[];
   b.options.forEach((o,idx)=>{
-    const lto=langText(o.text);
-    const el=document.createElement('div'); el.className='opt'+(lto.te?' te':'');
-    el.innerHTML=`<div class="rad"></div><div>${esc(lto.main)}</div>`;
+    const el=document.createElement('div'); el.className='opt';
+    el.innerHTML=`<div class="rad"></div><div>${richHTML(o.text)}</div>`;
     el.onclick=()=>{ if(locked)return; selected=idx; opts.forEach(x=>x.classList.remove('sel')); el.classList.add('sel'); };
     opts.push(el); card.appendChild(el);
   });
