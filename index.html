@@ -214,18 +214,21 @@ const CONFIG = {
   .audio-player .ap-time{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:34px;text-align:right}
 
   .fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;align-items:stretch}
-  .fc{perspective:1200px;min-height:250px;cursor:pointer}
-  .fc-inner{position:relative;width:100%;height:100%;min-height:250px;transition:transform .5s;transform-style:preserve-3d}
+  .fc{perspective:1200px;min-height:300px;cursor:pointer}
+  .fc-inner{position:relative;width:100%;height:100%;min-height:300px;transition:transform .5s;transform-style:preserve-3d}
+  /* the face that is turned away must never swallow taps (was blocking the audio player) */
+  .fc:not(.flip) .fc-back{pointer-events:none}
+  .fc.flip .fc-front{pointer-events:none}
   .fc.flip .fc-inner{transform:rotateY(180deg)}
   .fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:var(--shadow);overflow:hidden}
   .fc-front{background:linear-gradient(135deg,var(--navy),#134d61);color:#fff;padding:14px;gap:10px}
   .fc-front .fc-swatch{width:100%;max-height:150px;object-fit:contain;border-radius:8px}
   .fc-front .t{font-family:var(--display);font-weight:700;font-size:19px}
   .fc-front .hint{position:absolute;bottom:10px;font-size:10.5px;opacity:.6}
-  .fc-back{background:#fff;border:1.5px solid var(--blue);transform:rotateY(180deg);padding:12px;gap:8px;justify-content:flex-start;overflow-y:auto}
-  .fc-back .fc-bimg{width:100%;max-height:130px;object-fit:contain;border-radius:8px;background:#f4f7f9;flex-shrink:0}
+  .fc-back{background:#fff;border:1.5px solid var(--blue);transform:rotateY(180deg);padding:12px;gap:8px;justify-content:flex-start;overflow:hidden}
+  .fc-back .fc-bimg{width:100%;flex:1 1 auto;min-height:0;object-fit:cover;border-radius:8px;background:#f4f7f9}
   .fc-back .fc-btext{font-size:13.5px;line-height:1.5;color:var(--ink)}
-  .fc-back .audio-player{width:100%;padding:5px 10px;margin-top:auto}
+  .fc-back .audio-player{width:100%;padding:5px 10px;margin-top:auto;flex-shrink:0;position:relative;z-index:2}
   .fc-back .audio-player .ap-play{width:34px;height:34px;font-size:13px}
   /* step slider */
   .steps{margin:8px 0 4px}
@@ -583,8 +586,16 @@ function renderLesson(i){
   btn.textContent=last?'Finish prework':'Continue to next lesson';
   refreshContinue(quizCount,0);
   btn.onclick=()=>{ progress[i]={done:true}; save(); syncProgress(); updateProgress(); buildSide(); buildHomeLessons();
-    if(last){ showDone(); } else { curLesson=i+1; renderLesson(i+1); $('pContent').scrollTop=0; } };
-  $('pContent').scrollTop=0;
+    if(last){ showDone(); } else { curLesson=i+1; renderLesson(i+1); } };
+  resetScroll();
+}
+/* #scPlayer is min-height:100dvh, so .p-content never scrolls internally — the WINDOW
+   is the real scroller. Resetting only pContent.scrollTop left students at the bottom
+   of the next lesson. Reset both, after layout has settled. */
+function resetScroll(){
+  const go=()=>{ const el=$('pContent'); if(el) el.scrollTop=0;
+    window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body.scrollTop=0; };
+  go(); requestAnimationFrame(()=>{ go(); requestAnimationFrame(go); });
 }
 function refreshContinue(need,got){ $('btnContinue').disabled=(CONFIG.quizMode==='submit'&&need>0&&got<need); }
 
