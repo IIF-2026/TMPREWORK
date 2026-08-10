@@ -226,7 +226,7 @@ const CONFIG = {
   .fc-front .t{font-family:var(--display);font-weight:700;font-size:19px}
   .fc-front .hint{position:absolute;bottom:10px;font-size:10.5px;opacity:.6}
   .fc-back{background:#fff;border:1.5px solid var(--blue);transform:rotateY(180deg);padding:12px;gap:8px;justify-content:flex-start;overflow:hidden}
-  .fc-back .fc-bimg{width:100%;flex:1 1 auto;min-height:0;object-fit:cover;border-radius:8px;background:#f4f7f9}
+  .fc-back .fc-bimg{width:100%;flex:1 1 auto;min-height:0;object-fit:contain;border-radius:8px;background:#f4f7f9}
   .fc-back .fc-btext{font-size:13.5px;line-height:1.5;color:var(--ink)}
   .fc-back .audio-player{width:100%;padding:5px 10px;margin-top:auto;flex-shrink:0;position:relative;z-index:2}
   .fc-back .audio-player .ap-play{width:34px;height:34px;font-size:13px}
@@ -238,7 +238,7 @@ const CONFIG = {
   .step-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow);min-height:120px}
   .step-title{font-family:var(--display);font-weight:800;color:var(--navy);font-size:18px;margin-bottom:10px}
   .step-title.te,.step-text.te{font-family:var(--te)}
-  .step-img{width:100%;max-height:200px;object-fit:contain;border-radius:10px;margin-bottom:10px}
+  .step-img{width:100%;max-height:none;object-fit:contain;border-radius:10px;margin-bottom:10px}
   .step-text{font-size:14.5px;line-height:1.6;color:var(--ink)}
   .step-dots{display:flex;justify-content:center;gap:8px;margin-top:12px}
   .step-dot{width:9px;height:9px;border-radius:50%;background:var(--line);cursor:pointer;transition:background .2s}
