@@ -578,13 +578,14 @@ function renderLesson(i){
   const h=document.createElement('h1'); h.className='l-h'; h.textContent=L.title;
   body.appendChild(eb); body.appendChild(h);
   let quizCount=0; const answered={};
+  const alreadyDone=!!(progress[i]&&progress[i].done);
   L.blocks.forEach((b,bi)=>{ if(b.type==='quiz') quizCount++;
-    const el=blockEl(b,i,bi,()=>{ answered[bi]=true; refreshContinue(quizCount,Object.keys(answered).length); });
+    const el=blockEl(b,i,bi,()=>{ answered[bi]=true; refreshContinue(quizCount,Object.keys(answered).length,alreadyDone); });
     if(el) body.appendChild(el); });
   const last=i===COURSE.lessons.length-1;
   const btn=$('btnContinue'); btn.className='cta'+(last?' finish':'');
   btn.textContent=last?'Finish prework':'Continue to next lesson';
-  refreshContinue(quizCount,0);
+  refreshContinue(quizCount,0,alreadyDone);
   btn.onclick=()=>{ progress[i]={done:true}; save(); syncProgress(); updateProgress(); buildSide(); buildHomeLessons();
     if(last){ showDone(); } else { curLesson=i+1; renderLesson(i+1); } };
   resetScroll();
@@ -597,7 +598,9 @@ function resetScroll(){
     window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body.scrollTop=0; };
   go(); requestAnimationFrame(()=>{ go(); requestAnimationFrame(go); });
 }
-function refreshContinue(need,got){ $('btnContinue').disabled=(CONFIG.quizMode==='submit'&&need>0&&got<need); }
+/* A revisited lesson re-renders its quizzes unanswered, so the old gate locked the
+   button on lessons the student had already finished. Completed lessons bypass it. */
+function refreshContinue(need,got,alreadyDone){ $('btnContinue').disabled=(!alreadyDone&&CONFIG.quizMode==='submit'&&need>0&&got<need); }
 
 function blockEl(b,li,bi,onQuiz){
   const w=document.createElement('div'); w.className='blk';
