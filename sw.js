@@ -1,5 +1,5 @@
-const CACHE='tm-prework-v21';
-const CORE=['./','./index.html','./course-data.js','./manifest.json'];
+const CACHE='tm-prework-v22';
+const CORE=['./','./index.html','./course-data.js','./course-data-u02.js','./manifest.json'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',e=>{e.waitUntil(
   caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())
